@@ -11,7 +11,6 @@ import os
 from pyimagesearch.shapedetector import ShapeDetector
 import utm
 import imutils
-from datetime import datetime
 import argparse
 #------------------------------------------------------------------------
 ap = argparse.ArgumentParser()
@@ -127,10 +126,8 @@ for im in imageFiles:
 img_width = 1280
 img_height = 960
 sh_ratio = 0.5
-# Get system time to mark the output marker file
-t_index = str(datetime.now().strftime('%Y%m%d_%H%M%S'))
 # Set final output file name
-finalFile = open(targetPath+"\\markerList"+t_index+".csv",'wt')
+finalFile = open(targetPath+"\\markerList.csv",'wt')
 try:
     # Create final output file
     writer = csv.writer(finalFile, delimiter=',', lineterminator='\n')
