@@ -10,8 +10,10 @@ import PhotoScan
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-wp", "--wpath", required=True, help="workingPath")
+ap.add_argument("-mf", "--mfile", required=True, help="markerFile")
 args = vars(ap.parse_args())
 workingPath = args["wpath"]+"\\"
+markerFile = args["mfile"]
 print("Working path is: %s" % workingPath)
 
 project = workingPath+"ortho_dem_process.psx"
@@ -27,8 +29,7 @@ chunk = doc.chunk
 chunk.crs = PhotoScan.CoordinateSystem("EPSG::4326")
 
 # Assign GCPs
-markerFile = "markerList"
-markerList = open(workingPath+markerFile+".csv", "rt")
+markerList = open(markerFile, "rt")
 
 eof = False
 line = markerList.readline() #reading the line in input file
@@ -64,9 +65,9 @@ while not eof:
         break # EOF
 markerList.close()
 # Correct markers
-markerList = open(workingPath+markerFile+".csv", "rt")
+markerList = open(markerFile, "rt")
 # Set the corrected markerList file
-markerFileCorrected = open(workingPath+markerFile+"_c.csv",'wt')
+markerFileCorrected = open(markerFile.replace(".csv","_c.csv"),'wt')
 try:
     writer = csv.writer(markerFileCorrected, delimiter=',', lineterminator='\n')
     eof = False

@@ -66,13 +66,10 @@ ap.add_argument("-t", "--tgtPath", required=True,
     help="target image folder")
 ap.add_argument("-bf", "--bfile", required=True,
     help="boundary coordinate file")
-ap.add_argument("-td", "--tdatum", default="EPSG:32614",
-    help="Target datum EPSG, default is EPSG:32614")
 args = ap.parse_args()
 sourcePath = args.srcPath
 targetPath = args.tgtPath
 boundFile = args.bfile
-targetDatum = args.tdatum
 #------------------------------------------------------------------------
 # Get boundary Coordinates
 bCorners = numpy.recfromcsv(boundFile,delimiter=',')
@@ -88,8 +85,8 @@ fieldPolygon = Polygon([(sw_x, sw_y), (nw_x, nw_y), (ne_x, ne_y), (se_x, se_y)])
 #------------------------------------------------------------------------
 # Create renamed path
 try:
-    os.makedirs(targetPath+"\\calibrated")
-    print("Creating Renamed directory.")
+    os.makedirs(targetPath)
+    print("Creating target directory.")
 except OSError as exception:
     if exception.errno != errno.EEXIST:
         raise
@@ -102,14 +99,14 @@ for im in rawImages:
 for im in blueIm:
     [longi,lati] = getGPSExifFromImage(sourcePath+"\\"+im)    
     if fieldPolygon.contains(Point(longi,lati)):
-        newFile = shutil.copy2(sourcePath+"\\"+im,targetPath+"\\calibrated\\"+im)
+        newFile = shutil.copy2(sourcePath+"\\"+im,targetPath+"\\"+im)
         print("Copying %s" % newFile)
-        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_2.tif"),targetPath+"\\calibrated\\"+im.replace("_1.tif","_2.tif"))
+        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_2.tif"),targetPath+"\\"+im.replace("_1.tif","_2.tif"))
         print("Copying %s" % newFile)
-        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_3.tif"),targetPath+"\\calibrated\\"+im.replace("_1.tif","_3.tif"))
+        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_3.tif"),targetPath+"\\"+im.replace("_1.tif","_3.tif"))
         print("Copying %s" % newFile)
-        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_4.tif"),targetPath+"\\calibrated\\"+im.replace("_1.tif","_4.tif"))
+        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_4.tif"),targetPath+"\\"+im.replace("_1.tif","_4.tif"))
         print("Copying %s" % newFile)
-        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_5.tif"),targetPath+"\\calibrated\\"+im.replace("_1.tif","_5.tif"))
+        newFile = shutil.copy2(sourcePath+"\\"+im.replace("_1.tif","_5.tif"),targetPath+"\\"+im.replace("_1.tif","_5.tif"))
         print("Copying %s" % newFile)
     
