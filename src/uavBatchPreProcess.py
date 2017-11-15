@@ -162,14 +162,6 @@ for im in renamedIm:
     if im.find("_1.tif") != -1:
         blueIm.append(im)
 acc = 0
-# for im in renamedIm:
-#     with exiftool.ExifTool() as et:
-#         alti = float(et.get_tag('GPS:GPSAltitude',filePath+"\\renamed\\"+im))
-#     if alti < alti_th:
-#         # Move to low directory
-#         newFile = shutil.move(filePath+"\\renamed\\"+im, filePath+"\\low_altitude\\"+im)
-#         print("Moving %s" % newFile)
-#         acc += 1
 with exiftool.ExifTool() as et:
     for im in blueIm:
         alti = float(et.get_tag('GPS:GPSAltitude',filePath+"\\renamed\\"+im))
