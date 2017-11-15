@@ -18,7 +18,20 @@ from pyimagesearch.shapedetector import ShapeDetector
 import imutils
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
-
+#------------------------------------------------------------------------
+# Parameter settings, MAY NEED MODIFY
+# Calibration panel albedo value
+panelCalibration = { 
+    "Blue": 0.66, 
+    "Green": 0.67, 
+    "Red": 0.67, 
+    "Red edge": 0.66, 
+    "NIR": 0.6 
+}
+# For panel detection
+black_th=110
+cont_th=7000
+#------------------------------------------------------------------------
 def panelDetect(image,b_th,ct_th):
     image = cv2.imread(image)
     resized = imutils.resize(image, width=640, height=480)
@@ -26,8 +39,6 @@ def panelDetect(image,b_th,ct_th):
     gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
     thresh = cv2.threshold(blurred, b_th, 255, cv2.THRESH_BINARY)[1]
-#     cv2.imshow("Image", thresh)
-#     cv2.waitKey(0)
     cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
         cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if imutils.is_cv2() else cnts[1]
@@ -42,8 +53,6 @@ def panelDetect(image,b_th,ct_th):
             cY = int(round((M["m01"] / M["m00"]))) # * ratio
             shape = sd.detect(c)
         if shape == "square":
-            # print(shape)
-            # print("Estimated contour size: %f" % (cv2.contourArea(c)))
             if cv2.contourArea(c)>ct_th:
                 sq +=1
                 c = c.astype("float")
@@ -53,8 +62,6 @@ def panelDetect(image,b_th,ct_th):
                 approx = cv2.approxPolyDP(c, 0.04 * peri, True)
                 cv2.drawContours(image, [c], -1, (0, 255, 0), 1)
                 cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,0.5, (255, 255, 255), 1)
-#                 cv2.imshow("Image", image)
-#                 cv2.waitKey(0)
     if sq == 1:
         return approx
     else:
@@ -63,19 +70,8 @@ def panelDetect(image,b_th,ct_th):
 # construct the argument parse and parse the arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("fpath", help="main file path")
-# parser.add_argument("-td", "--tdatum", default="EPSG:32614", help="Target datum EPSG, default is EPSG:32614")
 args = parser.parse_args()
 filePath = args.fpath
-# targetDatum = args.tdatum
-#------------------------------------------------------------------------
-# Calibration panel albedo value
-panelCalibration = { 
-    "Blue": 0.66, 
-    "Green": 0.67, 
-    "Red": 0.67, 
-    "Red edge": 0.66, 
-    "NIR": 0.6 
-}
 #------------------------------------------------------------------------
 # Define the output LogFile
 logFile = 'Log_'+datetime.now().strftime("%y%m%d_%H%M%S")+'.txt'
@@ -161,15 +157,35 @@ except OSError as exception:
     if exception.errno != errno.EEXIST:
         raise
 renamedIm = os.listdir(filePath+"\\renamed")
-acc = 0
+blueIm = []
 for im in renamedIm:
-    with exiftool.ExifTool() as et:
+    if im.find("_1.tif") != -1:
+        blueIm.append(im)
+acc = 0
+# for im in renamedIm:
+#     with exiftool.ExifTool() as et:
+#         alti = float(et.get_tag('GPS:GPSAltitude',filePath+"\\renamed\\"+im))
+#     if alti < alti_th:
+#         # Move to low directory
+#         newFile = shutil.move(filePath+"\\renamed\\"+im, filePath+"\\low_altitude\\"+im)
+#         print("Moving %s" % newFile)
+#         acc += 1
+with exiftool.ExifTool() as et:
+    for im in blueIm:
         alti = float(et.get_tag('GPS:GPSAltitude',filePath+"\\renamed\\"+im))
-    if alti < alti_th:
-        # Move to low directory
-        newFile = shutil.move(filePath+"\\renamed\\"+im, filePath+"\\low_altitude\\"+im)
-        print("Moving %s" % newFile)
-        acc += 1
+        if alti < alti_th:
+            # Move to low directory
+            newFile = shutil.move(filePath+"\\renamed\\"+im, filePath+"\\low_altitude\\"+im)
+            print("Moving %s" % newFile)
+            newFile = shutil.move(filePath+"\\renamed\\"+im.replace("_1.tif","_2.tif"), filePath+"\\low_altitude\\"+im.replace("_1.tif","_2.tif"))
+            print("Moving %s" % newFile)
+            newFile = shutil.move(filePath+"\\renamed\\"+im.replace("_1.tif","_3.tif"), filePath+"\\low_altitude\\"+im.replace("_1.tif","_3.tif"))
+            print("Moving %s" % newFile)
+            newFile = shutil.move(filePath+"\\renamed\\"+im.replace("_1.tif","_4.tif"), filePath+"\\low_altitude\\"+im.replace("_1.tif","_4.tif"))
+            print("Moving %s" % newFile)
+            newFile = shutil.move(filePath+"\\renamed\\"+im.replace("_1.tif","_5.tif"), filePath+"\\low_altitude\\"+im.replace("_1.tif","_5.tif"))
+            print("Moving %s" % newFile)
+            acc += 5
 print("%d files moved to low_altitude" % acc)
 with open(logname, 'a') as logoutput:
     logoutput.write("%d files moved to low_altitude\n" % acc)
@@ -200,7 +216,7 @@ if acc > 0:
         meta = metadata.Metadata(imageName, exiftoolPath=exiftoolPath)
         bandName = meta.get_item('XMP:BandName')
         radianceImage, L, V, R = msutils.raw_image_to_radiance(meta, imageRaw)
-        panel_coords = panelDetect(imageName, 110, 7000)
+        panel_coords = panelDetect(imageName, black_th, cont_th)
         # Extract coordinates
         if panel_coords[0][0][0]:
             nw_x = int(panel_coords[0][0][0])
