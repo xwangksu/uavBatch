@@ -110,7 +110,7 @@ finally:
 for marker in chunk.markers:
     chunk.remove(marker)
 # Reinsert markers
-markerList = open(workingPath+markerFile+"_c.csv", "rt")
+markerList = open(markerFile.replace(".csv","_c.csv"), "rt")
 eof = False
 line = markerList.readline() #reading the line in input file
 while not eof:    
