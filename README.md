@@ -5,7 +5,7 @@ This trial (beta) version of the Python scripts is for local use, meaning no net
 
 The radiometric calibration model is according to https://support.micasense.com/hc/en-us/articles/115000351194-RedEdge-Camera-Radiometric-Calibration-Model. The Python scripts to do the radiometric calibration is modified based on https://github.com/micasense/imageprocessing.
 
-Necessary Python libraries need to be pre-installed to run the Python scripts. The Agisoft Python API used in this version of the Python script is v1.3.2. The trial version has been tested on a Windows machine.
+Necessary Python libraries need to be pre-installed to run the Python scripts. The Agisoft Python API used in this version is v1.3.2. The trial version has been tested on a Windows machine.
 
 The Python scripts include:
 
