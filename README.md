@@ -1,11 +1,13 @@
 # uavBatch
 The objective to develop the "uavBatch" Python scripts is to scientifically and automatically generate the ortho-photos from the aerial images captured by the MicaSense RedEdge(-M) camera.
 
-This trial (beta) version of the Python scripts is for local use, meaning no network connection needed. However, that also means necessary meta-data should be provided through files, such as field boundary coordinates and ground control points (GCPs) within in the boundary. Also, this version is only applied to the images captured by the MicaSense RedEdge(-M) cameras with the firmware after v2.1.x.
+This trial (beta) version of the Python scripts is for local use, meaning no network connection needed. However, that also means necessary meta-data should be provided through files, such as field boundary coordinates and ground control points (GCPs) within in the boundary. Also, this version is only applied to the images captured by the MicaSense RedEdge(-M) cameras with the firmware after v2.1.x. Python v3.5 is used for coding.
 
 The radiometric calibration model is according to https://support.micasense.com/hc/en-us/articles/115000351194-RedEdge-Camera-Radiometric-Calibration-Model. The Python scripts to do the radiometric calibration is modified based on https://github.com/micasense/imageprocessing.
 
-Necessary Python libraries need to be pre-installed to run the Python scripts. The Agisoft Python API used in this version is v1.3.2. The trial version has been tested on a Windows machine.
+Python libraries used in the scripts need to be pre-installed to run the scripts successfully. 
+
+The Agisoft Photoscan Python API used in this version is v1.3.2. The trial version has been tested on a Windows machine.
 
 The Python scripts include:
 
