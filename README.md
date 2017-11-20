@@ -19,7 +19,7 @@ uavBatchGroup.py
 
 This script selects all the images inside the field boundaries defined by the field boundary coordinate file and copies them to the target folder. An example of the field boundary coordinate file is attached.
 
-uavBatchMarkderDetection.py
+uavBatchMarkerDetection.py
 > uavBatchMarkderDetection.py <-s sourceImageFolder> <-t targetFolder> <-gf gcpFile>
 
 This script detects the GCPs listed in the GCP file within the images in the source image folder, and saves the "markerList.csv" file in the target folder. An example of the GCP files is attached.
