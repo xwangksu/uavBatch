@@ -39,4 +39,6 @@ uavBatchModelGeneration.py
 
 This script uses the Agisoft Python API to load the Agisoft project - "ortho_dem_process.psx" inside the source file folder, generate the ortho-photo and DEM model, and saved them as "ortho.tif" and "dem.tif" in the source file folder.
 
-If there is no GCP used, script #3 and script #5 are not necessary.
+If there is no field boundaries defined, "uavBatchGroup.py" is not necessary.
+
+If there is no GCP used, "uavBatchMarkerDetection.py" and "uavBatchGcpAssignment.py" are not necessary.
